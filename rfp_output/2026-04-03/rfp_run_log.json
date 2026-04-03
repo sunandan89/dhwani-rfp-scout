@@ -1,0 +1,278 @@
+{
+  "run_date": "2026-04-03T18:51:46.751692",
+  "total_scraped": 27,
+  "relevant_count": 11,
+  "proposals_drafted": 0,
+  "rfps": [
+    {
+      "title": "RFP for Agri AI Collect Deployment in Kharif 2026-2027",
+      "organization": "Lords Education and Health Society (LEHS)",
+      "deadline": "",
+      "score": 9,
+      "recommendation": "apply",
+      "reason": "Based on keyword matching (Claude API not configured)",
+      "url": "https://www.devnetjobsindia.org/JobDescription.aspx?Job_Id=288869",
+      "has_proposal": false
+    },
+    {
+      "title": "RFP for For Multilingual Data Collection Services for AgriAI Collect",
+      "organization": "Lords Education and Health Society (LEHS)",
+      "deadline": "",
+      "score": 10,
+      "recommendation": "apply",
+      "reason": "Based on keyword matching (Claude API not configured)",
+      "url": "https://www.devnetjobsindia.org/JobDescription.aspx?Job_Id=288871",
+      "has_proposal": false
+    },
+    {
+      "title": "RFQ-Outsourced Manpower Services (Housekeeping, MTS, Security & Drivers)",
+      "organization": "Coalition for Disaster Resilient Infrastructure (CDRI)",
+      "deadline": "",
+      "score": 0,
+      "recommendation": "skip",
+      "reason": "Based on keyword matching (Claude API not configured)",
+      "url": "https://devnetjobsindia.org/JobDescription.aspx?Job_Id=289140",
+      "has_proposal": false
+    },
+    {
+      "title": "EOI for a study on Impact Evaluation and Value for Money Analysis of CINI’...",
+      "organization": "Child in Need Institute (CINI)",
+      "deadline": "",
+      "score": 2,
+      "recommendation": "skip",
+      "reason": "Based on keyword matching (Claude API not configured)",
+      "url": "https://www.devnetjobsindia.org/JobDescription.aspx?Job_Id=289121",
+      "has_proposal": false
+    },
+    {
+      "title": "RFP - for Hiring of a Nukkad Natak Agency for community-based activities u...",
+      "organization": "JSI R&T India Foundation (JSI R&T)",
+      "deadline": "",
+      "score": 0,
+      "recommendation": "skip",
+      "reason": "Based on keyword matching (Claude API not configured)",
+      "url": "https://devnetjobsindia.org/JobDescription.aspx?Job_Id=289057",
+      "has_proposal": false
+    },
+    {
+      "title": "RFP - For Cab Hiring Services North East Region",
+      "organization": "Lords Education and Health Society (LEHS)",
+      "deadline": "",
+      "score": 0,
+      "recommendation": "skip",
+      "reason": "Based on keyword matching (Claude API not configured)",
+      "url": "https://www.devnetjobsindia.org/JobDescription.aspx?Job_Id=289043",
+      "has_proposal": false
+    },
+    {
+      "title": "RFP for Data Collection for Foundational Numeracy Tool in UP",
+      "organization": "Lords Education and Health Society (LEHS)",
+      "deadline": "",
+      "score": 9,
+      "recommendation": "apply",
+      "reason": "Based on keyword matching (Claude API not configured)",
+      "url": "https://www.devnetjobsindia.org/JobDescription.aspx?Job_Id=289044",
+      "has_proposal": false
+    },
+    {
+      "title": "RFP for Hiring a Survey Firm to Conduct the Technical Needs Assessment Sur...",
+      "organization": "EAII Advisors Pvt Ltd",
+      "deadline": "",
+      "score": 5,
+      "recommendation": "consider",
+      "reason": "Based on keyword matching (Claude API not configured)",
+      "url": "https://www.devnetjobsindia.org/JobDescription.aspx?Job_Id=289050",
+      "has_proposal": false
+    },
+    {
+      "title": "RFP - On-Call Taxi Services for Raipur (Chhattisgarh) Local & Outstation T...",
+      "organization": "Jhpiego",
+      "deadline": "",
+      "score": 2,
+      "recommendation": "skip",
+      "reason": "Based on keyword matching (Claude API not configured)",
+      "url": "https://www.devnetjobsindia.org/JobDescription.aspx?Job_Id=289066",
+      "has_proposal": false
+    },
+    {
+      "title": "RFP - Provision of Identity, Access & Device Management Solution (JumpClou...",
+      "organization": "Lords Education and Health Society (LEHS)",
+      "deadline": "",
+      "score": 9,
+      "recommendation": "apply",
+      "reason": "Based on keyword matching (Claude API not configured)",
+      "url": "https://www.devnetjobsindia.org/JobDescription.aspx?Job_Id=288782",
+      "has_proposal": false
+    },
+    {
+      "title": "RFP - Assessment of WASH Access among Affordable Housing Finance Borrowers",
+      "organization": "Water.org",
+      "deadline": "",
+      "score": 6,
+      "recommendation": "consider",
+      "reason": "Based on keyword matching (Claude API not configured)",
+      "url": "https://devnetjobsindia.org/JobDescription.aspx?Job_Id=289012",
+      "has_proposal": false
+    },
+    {
+      "title": "RFP - for an IVRS-based Treatment Literacy Programme for People with Diabe...",
+      "organization": "REACH",
+      "deadline": "",
+      "score": 8,
+      "recommendation": "apply",
+      "reason": "Based on keyword matching (Claude API not configured)",
+      "url": "https://devnetjobsindia.org/JobDescription.aspx?Job_Id=288572",
+      "has_proposal": false
+    },
+    {
+      "title": "IFP - for Strengthening systems for multi-sectoral response to Gender-Base...",
+      "organization": "UNFPA",
+      "deadline": "",
+      "score": 3,
+      "recommendation": "skip",
+      "reason": "Based on keyword matching (Claude API not configured)",
+      "url": "https://devnetjobsindia.org/JobDescription.aspx?Job_Id=288192",
+      "has_proposal": false
+    },
+    {
+      "title": "RFP - Baseline Assessment of the Food Security Standard at Vikarabad In Te...",
+      "organization": "Deutsche Welthungerhilfe",
+      "deadline": "",
+      "score": 1,
+      "recommendation": "skip",
+      "reason": "Based on keyword matching (Claude API not configured)",
+      "url": "https://devnetjobsindia.org/JobDescription.aspx?Job_Id=288987",
+      "has_proposal": false
+    },
+    {
+      "title": "RFP - Consultancy Service for a Quasi-Experimental Baseline Study Under a ...",
+      "organization": "Deutsche Welthungerhilfe",
+      "deadline": "",
+      "score": 1,
+      "recommendation": "skip",
+      "reason": "Based on keyword matching (Claude API not configured)",
+      "url": "https://devnetjobsindia.org/JobDescription.aspx?Job_Id=288967",
+      "has_proposal": false
+    },
+    {
+      "title": "RFP - for a Travel Agency",
+      "organization": "The Humsafar Trust (HST)",
+      "deadline": "",
+      "score": 0,
+      "recommendation": "skip",
+      "reason": "Based on keyword matching (Claude API not configured)",
+      "url": "https://www.devnetjobsindia.org/JobDescription.aspx?Job_Id=288466",
+      "has_proposal": false
+    },
+    {
+      "title": "RFP - Hiring of Agency to provide Security Guard at Jhpiego State Office, ...",
+      "organization": "Jhpiego",
+      "deadline": "",
+      "score": 5,
+      "recommendation": "consider",
+      "reason": "Based on keyword matching (Claude API not configured)",
+      "url": "https://www.devnetjobsindia.org/JobDescription.aspx?Job_Id=288664",
+      "has_proposal": false
+    },
+    {
+      "title": "RFQ - A Specialised Talent Management Agency to support the amplification ...",
+      "organization": "UNFPA",
+      "deadline": "",
+      "score": 2,
+      "recommendation": "skip",
+      "reason": "Based on keyword matching (Claude API not configured)",
+      "url": "https://devnetjobsindia.org/JobDescription.aspx?Job_Id=288682",
+      "has_proposal": false
+    },
+    {
+      "title": "ToR for External Independent Audit of Development Agency for Poor & Tribal...",
+      "organization": "Development Agency for Poor and Tribal Awakening (DAPTA)",
+      "deadline": "",
+      "score": 2,
+      "recommendation": "skip",
+      "reason": "Based on keyword matching (Claude API not configured)",
+      "url": "https://devnetjobsindia.org/JobDescription.aspx?Job_Id=288900",
+      "has_proposal": false
+    },
+    {
+      "title": "RFQ - Supply, Installation, Commissioning and Handover of Sewerage Pipe la...",
+      "organization": "WaterAid India",
+      "deadline": "",
+      "score": 1,
+      "recommendation": "skip",
+      "reason": "Based on keyword matching (Claude API not configured)",
+      "url": "https://devnetjobsindia.org/JobDescription.aspx?Job_Id=288575",
+      "has_proposal": false
+    },
+    {
+      "title": "RFQ - Study on the Intersection of Megatrends and Child Marriage: Emerging...",
+      "organization": "UNFPA",
+      "deadline": "",
+      "score": 0,
+      "recommendation": "skip",
+      "reason": "Based on keyword matching (Claude API not configured)",
+      "url": "https://devnetjobsindia.org/JobDescription.aspx?Job_Id=288453",
+      "has_proposal": false
+    },
+    {
+      "title": "RFQ - Advancing Rights and Choices: Documenting Good Practices and Policy ...",
+      "organization": "UNFPA",
+      "deadline": "",
+      "score": 5,
+      "recommendation": "consider",
+      "reason": "Based on keyword matching (Claude API not configured)",
+      "url": "https://devnetjobsindia.org/JobDescription.aspx?Job_Id=288451",
+      "has_proposal": false
+    },
+    {
+      "title": "RFP - An Audio Visual Documentary On The Kalindi River System In The India...",
+      "organization": "AHEAD Initiatives",
+      "deadline": "",
+      "score": 0,
+      "recommendation": "skip",
+      "reason": "Based on keyword matching (Claude API not configured)",
+      "url": "https://www.devnetjobsindia.org/JobDescription.aspx?Job_Id=288806",
+      "has_proposal": false
+    },
+    {
+      "title": "RFP for the Deployment of the AgriVaani Application",
+      "organization": "Lords Education and Health Society (LEHS)",
+      "deadline": "",
+      "score": 10,
+      "recommendation": "apply",
+      "reason": "Based on keyword matching (Claude API not configured)",
+      "url": "https://www.devnetjobsindia.org/JobDescription.aspx?Job_Id=288754",
+      "has_proposal": false
+    },
+    {
+      "title": "RFP -Empanelment of Technical Consultants for Panipat (Haryana), Amroha & ...",
+      "organization": "Foundation for MSME Clusters",
+      "deadline": "",
+      "score": 7,
+      "recommendation": "apply",
+      "reason": "Based on keyword matching (Claude API not configured)",
+      "url": "https://www.devnetjobsindia.org/JobDescription.aspx?Job_Id=287463",
+      "has_proposal": false
+    },
+    {
+      "title": "RFP - Development of a Standardised WASH BCC Tool – UL4BC India Package",
+      "organization": "Deutsche Welthungerhilfe",
+      "deadline": "",
+      "score": 0,
+      "recommendation": "skip",
+      "reason": "Based on keyword matching (Claude API not configured)",
+      "url": "https://devnetjobsindia.org/JobDescription.aspx?Job_Id=288473",
+      "has_proposal": false
+    },
+    {
+      "title": "RFP - Technical Agency to Support Policy, Advocacy, and Systems Integratio...",
+      "organization": "Global Alliance for Improved Nutrition (GAIN)",
+      "deadline": "",
+      "score": 3,
+      "recommendation": "skip",
+      "reason": "Based on keyword matching (Claude API not configured)",
+      "url": "https://devnetjobsindia.org/JobDescription.aspx?Job_Id=288457",
+      "has_proposal": false
+    }
+  ]
+}
