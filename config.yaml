@@ -1,0 +1,66 @@
+# ============================================================
+#  Dhwani RIS - RFP Scout Agent Configuration
+#  Edit this file before running rfp_agent.py
+# ============================================================
+
+# ─── Claude API ──────────────────────────────────────────────
+# Get your key from: https://console.anthropic.com/
+# The agent uses Claude to score RFPs and draft proposals.
+# Without this, scoring falls back to keyword matching only (no proposal drafting).
+anthropic_api_key: "YOUR_ANTHROPIC_API_KEY_HERE"
+
+
+# ─── Email Settings ──────────────────────────────────────────
+email:
+  enabled: true                         # Set to false to disable email (digest saved to folder only)
+  sender_email: "your-email@gmail.com"  # Gmail address you want to send FROM
+  password: "xxxx xxxx xxxx xxxx"       # Gmail App Password (NOT your regular password)
+                                        # How to get App Password:
+                                        # 1. Go to myaccount.google.com/security
+                                        # 2. Enable 2-Step Verification
+                                        # 3. Search "App passwords" → create one for "Mail"
+                                        # 4. Paste the 16-character password above
+  recipients:
+    - "sunandan@dhwaniris.com"          # Who should receive the daily digest
+    - "salesperson@dhwaniris.com"       # Add more recipients as needed
+  smtp_host: "smtp.gmail.com"
+  smtp_port: 587
+
+
+# ─── Scoring Thresholds ──────────────────────────────────────
+min_score: 5          # Minimum score (0–10) to include an RFP in the digest
+                      # RFPs below this score are ignored. Recommend: 5
+
+draft_threshold: 7    # Minimum score to auto-draft a full proposal
+                      # Only high-scoring RFPs get proposals drafted. Recommend: 7
+
+
+# ─── Output ──────────────────────────────────────────────────
+output_dir: "./rfp_output"   # Where to save daily digests, proposals, and logs
+                              # A subfolder per date is created automatically
+
+
+# ─── Devex (Optional) ────────────────────────────────────────
+# Devex requires a Pro subscription. If you have one:
+# 1. Log into devex.com in Chrome
+# 2. Open DevTools → Application → Cookies → copy the full cookie string
+# 3. Paste it below
+devex:
+  devex_cookie: ""    # Leave blank to skip Devex scraping
+
+
+# ─── Advanced (optional tweaks) ──────────────────────────────
+# Sectors to PRIORITISE (RFPs mentioning these get bonus points)
+priority_sectors:
+  - "health"
+  - "education"
+  - "livelihoods"
+  - "gender"
+  - "nutrition"
+  - "WASH"
+
+# Keywords that make an RFP automatically skip (add your own)
+extra_skip_keywords:
+  - "CA firm"
+  - "security guard"
+  - "vehicle"
