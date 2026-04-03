@@ -752,9 +752,26 @@ def send_email_digest(relevant_rfps, config, output_dir):
     logging.info(f"HTML digest saved: {digest_path}")
 
     # ── Send email ───────────────────────────────
+    # Environment variables override config.yaml (used by GitHub Actions)
     email_cfg = config.get('email', {})
+    env_sender     = os.environ.get('EMAIL_SENDER')
+    env_password   = os.environ.get('EMAIL_PASSWORD')
+    env_recipients = os.environ.get('EMAIL_RECIPIENTS')  # comma-separated
+    env_smtp_host  = os.environ.get('EMAIL_SMTP_HOST')
+    env_smtp_port  = os.environ.get('EMAIL_SMTP_PORT')
+
+    if env_sender:    email_cfg['sender_email'] = env_sender
+    if env_password:  email_cfg['password']     = env_password
+    if env_recipients:
+        email_cfg['recipients'] = [r.strip() for r in env_recipients.split(',')]
+    if env_smtp_host: email_cfg['smtp_host']    = env_smtp_host
+    if env_smtp_port: email_cfg['smtp_port']    = int(env_smtp_port)
+    # Auto-enable if env vars are present
+    if env_sender and env_password and env_recipients:
+        email_cfg['enabled'] = True
+
     if not email_cfg.get('enabled'):
-        logging.info("Email not enabled in config.yaml. Digest saved to output folder only.")
+        logging.info("Email not enabled. Digest saved to output folder only.")
         return str(digest_path)
 
     msg = MIMEMultipart('related')
