@@ -132,7 +132,7 @@ def scrape_devnetjobsindia(test_mode=False):
             if match:
                 postback_target = match.group(1)
 
-        rfps.append(
+        rfps.append({
             'title': title,
             'organization': org,
             'location': location,
