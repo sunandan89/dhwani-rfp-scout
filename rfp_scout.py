@@ -14,12 +14,13 @@ Usage:
     python rfp_scout.py --test            # Process first 3 RFPs only
 
 Output (written to rfp_output/YYYY-MM-DD/):
-    rfp_results.json    — all scored RFPs (input for proposal_agent.py)
-    rfp_run_log.json    — run stats (for GitHub Actions summary)
-    rfp_digest_*.html   — HTML email digest saved locally
+    rfp_results.json         — all scored RFPs (input for proposal_agent.py)
+    rfp_run_log.json         — run stats (for GitHub Actions summary)
+    rfp_digest_*.html        — HTML email digest saved locally
+    rfp_results_*.xlsx       — Excel report attached to email
 
 Requirements:
-    pip install requests beautifulsoup4 pyyaml anthropic
+    pip install requests beautifulsoup4 pyyaml anthropic openpyxl
 """
 
 import os
@@ -34,6 +35,7 @@ import requests
 from datetime import datetime
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+from email.mime.application import MIMEApplication
 from pathlib import Path
 
 try:
@@ -41,6 +43,15 @@ try:
     ANTHROPIC_AVAILABLE = True
 except ImportError:
     ANTHROPIC_AVAILABLE = False
+
+try:
+    from openpyxl import Workbook
+    from openpyxl.styles import (Font, PatternFill, Alignment,
+                                  Border, Side, GradientFill)
+    from openpyxl.utils import get_column_letter
+    OPENPYXL_AVAILABLE = True
+except ImportError:
+    OPENPYXL_AVAILABLE = False
 
 from dhwani_profile import (
     DHWANI_PROFILE,
@@ -301,20 +312,241 @@ def _score_with_keywords(rfp):
 
 
 # ─────────────────────────────────────────────
+#  EXCEL REPORT
+# ─────────────────────────────────────────────
+
+def generate_excel_report(all_rfps, output_dir):
+    """
+    Generate a branded Excel report with two sheets:
+      • Shortlisted  — RFPs recommended to apply or consider
+      • All RFPs     — Everything scraped with scores
+    Returns path to the saved .xlsx file, or None if openpyxl is unavailable.
+    """
+    if not OPENPYXL_AVAILABLE:
+        logging.warning("openpyxl not installed — skipping Excel report. pip install openpyxl")
+        return None
+
+    today = datetime.now().strftime('%Y-%m-%d')
+    filename = f"rfp_results_{today}.xlsx"
+    filepath = Path(output_dir) / filename
+
+    wb = Workbook()
+
+    # ── Colour palette ──────────────────────────────────────
+    RED_DARK   = "8B0000"
+    RED        = "C00000"
+    WHITE      = "FFFFFF"
+    GREEN_BG   = "E8F5E9"
+    GREEN_FONT = "1B5E20"
+    AMBER_BG   = "FFF8E1"
+    AMBER_FONT = "E65100"
+    GREY_BG    = "F5F5F5"
+    HEADER_BG  = "C00000"
+
+    thin_border = Border(
+        left=Side(style='thin', color='D0D0D0'),
+        right=Side(style='thin', color='D0D0D0'),
+        top=Side(style='thin', color='D0D0D0'),
+        bottom=Side(style='thin', color='D0D0D0'),
+    )
+
+    def _style_header_row(ws, row_num, columns):
+        for col_num, header in enumerate(columns, 1):
+            cell = ws.cell(row=row_num, column=col_num, value=header)
+            cell.font = Font(name='Arial', bold=True, color=WHITE, size=10)
+            cell.fill = PatternFill('solid', fgColor=HEADER_BG)
+            cell.alignment = Alignment(horizontal='center', vertical='center', wrap_text=True)
+            cell.border = thin_border
+
+    def _style_data_row(ws, row_num, values, bg_color):
+        for col_num, val in enumerate(values, 1):
+            cell = ws.cell(row=row_num, column=col_num, value=val)
+            cell.font = Font(name='Arial', size=9)
+            cell.fill = PatternFill('solid', fgColor=bg_color)
+            cell.alignment = Alignment(vertical='top', wrap_text=True)
+            cell.border = thin_border
+
+    # ═══════════════════════════════════════════════════════
+    #  SHEET 1 — Shortlisted RFPs
+    # ═══════════════════════════════════════════════════════
+    ws1 = wb.active
+    ws1.title = "Shortlisted RFPs"
+
+    # Title banner
+    ws1.merge_cells('A1:J1')
+    banner = ws1['A1']
+    banner.value = f"Dhwani RIS — RFP Scout Results  |  {datetime.now().strftime('%d %B %Y')}"
+    banner.font = Font(name='Arial', bold=True, size=14, color=WHITE)
+    banner.fill = PatternFill('solid', fgColor=RED_DARK)
+    banner.alignment = Alignment(horizontal='center', vertical='center')
+    ws1.row_dimensions[1].height = 30
+
+    # Sub-banner
+    ws1.merge_cells('A2:J2')
+    shortlisted = [r for r in all_rfps
+                   if r.get('scoring', {}).get('recommendation') in ('apply', 'consider')]
+    apply_n   = sum(1 for r in shortlisted if r.get('scoring', {}).get('recommendation') == 'apply')
+    consider_n = len(shortlisted) - apply_n
+    sub = ws1['A2']
+    sub.value = (f"✅ {apply_n} to Apply   🤔 {consider_n} to Consider   "
+                 f"📋 {len(all_rfps)} total scraped")
+    sub.font = Font(name='Arial', size=10, bold=True, color=RED)
+    sub.alignment = Alignment(horizontal='center', vertical='center')
+    ws1.row_dimensions[2].height = 20
+
+    # Empty row
+    ws1.row_dimensions[3].height = 6
+
+    # Headers
+    COLS_SHORT = [
+        "Rank", "Score\n(/10)", "Recommendation", "Title",
+        "Organization", "Location", "Deadline", "Sector",
+        "Relevant\nProduct", "URL"
+    ]
+    _style_header_row(ws1, 4, COLS_SHORT)
+    ws1.row_dimensions[4].height = 32
+
+    # Data rows
+    rank = 0
+    for rfp in sorted(shortlisted,
+                      key=lambda r: r.get('scoring', {}).get('score', 0), reverse=True):
+        sc  = rfp.get('scoring', {})
+        rec = sc.get('recommendation', 'consider')
+        rank += 1
+
+        bg = GREEN_BG if rec == 'apply' else AMBER_BG
+        rec_label = "✅ APPLY" if rec == 'apply' else "🤔 CONSIDER"
+
+        row_vals = [
+            rank,
+            sc.get('score', 0),
+            rec_label,
+            rfp.get('title', ''),
+            rfp.get('organization', ''),
+            rfp.get('location', ''),
+            rfp.get('deadline', ''),
+            rfp.get('sector', ''),
+            sc.get('relevant_product', ''),
+            rfp.get('url', ''),
+        ]
+        row_num = rank + 4
+        _style_data_row(ws1, row_num, row_vals, bg)
+        ws1.row_dimensions[row_num].height = 36
+
+        # Make score bold
+        score_cell = ws1.cell(row=row_num, column=2)
+        score_cell.font = Font(name='Arial', size=10, bold=True,
+                               color=GREEN_FONT if rec == 'apply' else AMBER_FONT)
+        score_cell.alignment = Alignment(horizontal='center', vertical='top')
+
+        # Make rec bold
+        rec_cell = ws1.cell(row=row_num, column=3)
+        rec_cell.font = Font(name='Arial', size=9, bold=True,
+                              color=GREEN_FONT if rec == 'apply' else AMBER_FONT)
+        rec_cell.alignment = Alignment(horizontal='center', vertical='top')
+
+        # URL as hyperlink
+        url = rfp.get('url', '')
+        if url:
+            url_cell = ws1.cell(row=row_num, column=10)
+            url_cell.value = "View RFP →"
+            url_cell.hyperlink = url
+            url_cell.font = Font(name='Arial', size=9, color="0066CC",
+                                  underline='single')
+
+    # Column widths (Sheet 1)
+    col_widths_s1 = [6, 8, 14, 48, 30, 18, 16, 20, 18, 14]
+    for i, w in enumerate(col_widths_s1, 1):
+        ws1.column_dimensions[get_column_letter(i)].width = w
+
+    # Freeze panes below header
+    ws1.freeze_panes = 'A5'
+
+    # ═══════════════════════════════════════════════════════
+    #  SHEET 2 — All Scraped RFPs
+    # ═══════════════════════════════════════════════════════
+    ws2 = wb.create_sheet("All RFPs")
+
+    ws2.merge_cells('A1:I1')
+    b2 = ws2['A1']
+    b2.value = f"All Scraped RFPs — {datetime.now().strftime('%d %B %Y')}  ({len(all_rfps)} total)"
+    b2.font = Font(name='Arial', bold=True, size=12, color=WHITE)
+    b2.fill = PatternFill('solid', fgColor=RED_DARK)
+    b2.alignment = Alignment(horizontal='center', vertical='center')
+    ws2.row_dimensions[1].height = 26
+
+    COLS_ALL = [
+        "Score\n(/10)", "Recommendation", "Title",
+        "Organization", "Location", "Deadline", "Sector",
+        "Reason / Scoring Note", "URL"
+    ]
+    _style_header_row(ws2, 2, COLS_ALL)
+    ws2.row_dimensions[2].height = 32
+
+    for row_idx, rfp in enumerate(
+            sorted(all_rfps, key=lambda r: r.get('scoring', {}).get('score', 0), reverse=True),
+            start=3):
+        sc  = rfp.get('scoring', {})
+        rec = sc.get('recommendation', 'skip')
+        bg = (GREEN_BG if rec == 'apply'
+              else (AMBER_BG if rec == 'consider' else GREY_BG))
+
+        row_vals = [
+            sc.get('score', 0),
+            rec.upper(),
+            rfp.get('title', ''),
+            rfp.get('organization', ''),
+            rfp.get('location', ''),
+            rfp.get('deadline', ''),
+            rfp.get('sector', ''),
+            sc.get('reason', ''),
+            rfp.get('url', ''),
+        ]
+        _style_data_row(ws2, row_idx, row_vals, bg)
+        ws2.row_dimensions[row_idx].height = 28
+
+        # Hyperlink URL
+        url = rfp.get('url', '')
+        if url:
+            url_cell = ws2.cell(row=row_idx, column=9)
+            url_cell.value = "View →"
+            url_cell.hyperlink = url
+            url_cell.font = Font(name='Arial', size=9, color="0066CC", underline='single')
+
+    col_widths_s2 = [8, 14, 48, 30, 18, 16, 20, 45, 10]
+    for i, w in enumerate(col_widths_s2, 1):
+        ws2.column_dimensions[get_column_letter(i)].width = w
+
+    ws2.freeze_panes = 'A3'
+
+    wb.save(str(filepath))
+    logging.info(f"Excel report saved: {filepath}")
+    return str(filepath)
+
+
+# ─────────────────────────────────────────────
 #  EMAIL DIGEST
 # ─────────────────────────────────────────────
 
-def send_email_digest(relevant_rfps, config, output_dir):
+def send_email_digest(relevant_rfps, config, output_dir, excel_file=None):
     """
     Build and send the daily digest email.
+    Attaches the Excel report (rfp_results_*.xlsx) when excel_file is provided.
     NOTE: Proposals are NOT attached here — that is proposal_agent.py's job.
-    The digest links to the rfp_results.json for further processing.
     """
     today_str = datetime.now().strftime('%d %B %Y')
     apply_count   = sum(1 for r in relevant_rfps
                         if r.get('scoring', {}).get('recommendation') == 'apply')
     consider_count = sum(1 for r in relevant_rfps
                          if r.get('scoring', {}).get('recommendation') == 'consider')
+
+    excel_note = (
+        '<div style="background:#E8F5E9; border-left:4px solid #2e7d32; padding:10px 16px; '
+        'margin-bottom:16px; border-radius:0 6px 6px 0; font-size:13px;">'
+        '📎 <strong>Full results attached as Excel spreadsheet</strong> '
+        '(rfp_results_' + datetime.now().strftime('%Y-%m-%d') + '.xlsx)'
+        '</div>'
+    ) if excel_file else ''
 
     html = f"""<!DOCTYPE html>
 <html>
@@ -325,7 +557,7 @@ def send_email_digest(relevant_rfps, config, output_dir):
   <p style="color: #ffcccc; margin: 6px 0 0 0; font-size: 14px;">Dhwani RIS Business Development &nbsp;|&nbsp; {today_str}</p>
 </div>
 
-<div style="background: #f7f7f7; border-left: 4px solid #c00000; padding: 12px 16px; margin-bottom: 20px; border-radius: 0 6px 6px 0;">
+<div style="background: #f7f7f7; border-left: 4px solid #c00000; padding: 12px 16px; margin-bottom: 16px; border-radius: 0 6px 6px 0;">
   <strong>Today's Summary:</strong>
   &nbsp; ✅ <strong>{apply_count}</strong> to Apply
   &nbsp; 🤔 <strong>{consider_count}</strong> to Consider
@@ -333,6 +565,7 @@ def send_email_digest(relevant_rfps, config, output_dir):
     To generate proposal drafts, run: <code>python proposal_agent.py --from-results rfp_output/YYYY-MM-DD/rfp_results.json</code>
   </small>
 </div>
+{excel_note}
 """
 
     for rfp in relevant_rfps:
@@ -398,11 +631,23 @@ def send_email_digest(relevant_rfps, config, output_dir):
         logging.info("Email not enabled. Digest saved to output folder only.")
         return str(digest_path)
 
-    msg = MIMEMultipart('related')
+    msg = MIMEMultipart('mixed')
     msg['Subject'] = f"[RFP Scout] {apply_count} to Apply, {consider_count} to Consider — {today_str}"
     msg['From']    = email_cfg['sender_email']
     msg['To']      = ', '.join(email_cfg['recipients'])
     msg.attach(MIMEText(html, 'html'))
+
+    # Attach Excel report
+    if excel_file and Path(excel_file).exists():
+        with open(excel_file, 'rb') as f:
+            part = MIMEApplication(
+                f.read(),
+                _subtype='vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+            )
+            part.add_header('Content-Disposition', 'attachment',
+                             filename=Path(excel_file).name)
+            msg.attach(part)
+        logging.info(f"  → Attaching Excel: {Path(excel_file).name}")
 
     try:
         smtp_host = email_cfg.get('smtp_host', 'smtp.office365.com')
@@ -509,6 +754,10 @@ def main():
     logging.info(f"Results saved: {results_file}")
     logging.info(f"  → To draft proposals: python proposal_agent.py --from-results {results_file}")
 
+    # ── Generate Excel report ─────────────────────────────
+    logging.info("▶ Generating Excel report...")
+    excel_file = generate_excel_report(all_rfps, str(today_out))
+
     # ── Save run log (for GitHub Actions summary) ─────────────
     log_data = {
         'run_date': datetime.now().isoformat(),
@@ -530,10 +779,10 @@ def main():
     with open(log_file, 'w', encoding='utf-8') as f:
         json.dump(log_data, f, indent=2, ensure_ascii=False)
 
-    # ── Email digest ──────────────────────────
+    # ── Email digest (with Excel attached) ───────────────────
     if relevant:
-        logging.info("▶ Sending email digest...")
-        send_email_digest(relevant, config, str(today_out))
+        logging.info("▶ Sending email digest with Excel attachment...")
+        send_email_digest(relevant, config, str(today_out), excel_file=excel_file)
     else:
         logging.info("No relevant RFPs today — no digest sent.")
 
@@ -544,6 +793,8 @@ def main():
     logging.info(f"  Relevant       : {len(relevant)}")
     logging.info(f"  Output folder  : {today_out}")
     logging.info(f"  Results JSON   : {results_file}")
+    if excel_file:
+        logging.info(f"  Excel report   : {excel_file}")
     logging.info("=" * 65)
 
     return relevant
