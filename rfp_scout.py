@@ -246,7 +246,15 @@ def score_rfp(rfp, claude_client):
 
 def _score_with_claude(rfp, client):
     desc = (rfp.get('full_description') or '')[:2000]
-    prompt = f"""You are a business development expert for Dhwani RIS — an Indian IT company serving the social sector.
+    prompt = f"""You are a senior business development manager at Dhwani RIS — an Indian IT company serving the social sector.
+
+DHWANI'S PRODUCTS & SERVICES:
+- mGrant: Grant lifecycle management SaaS — used by foundations, CSR teams, government schemes to manage applications, approvals, disbursements, reporting
+- mForm: Mobile data collection platform — offline-capable forms for field surveys, beneficiary registration, monitoring visits, WASH/health/agri data
+- mLearn: Learning management system for NGO staff/field worker training
+- Custom Dev: Bespoke MIS, dashboards, HMIS, programme tracking systems built for specific clients
+- Tech Consulting: Digital transformation advisory, system integration, capacity building
+- DaaS (Data as a Service): Analytics, impact measurement, data visualisation dashboards
 
 DHWANI PROFILE:
 {DHWANI_PROFILE}
@@ -260,18 +268,19 @@ Deadline: {rfp.get('deadline', '')}
 Description: {desc if desc else 'Not available'}
 
 Score 0–10 for Dhwani RIS relevance:
-10 = Perfect (grant management software, MIS platform, data collection app, HMIS)
-7–9 = Good fit (tech solution in a sector Dhwani serves)
-4–6 = Moderate (some tech component but not Dhwani's core)
-1–3 = Weak (minimal tech)
-0 = Not relevant (physical goods, housekeeping, travel, CA audit, film production, etc.)
+10 = Perfect match — core Dhwani product fits directly (e.g. grant MIS, mobile data collection, beneficiary tracking)
+7–9 = Strong fit — tech solution in a sector Dhwani serves, minor customisation needed
+4–6 = Moderate — some tech component but not Dhwani's primary strength
+1–3 = Weak — minimal IT scope or very niche domain
+0 = Not relevant — physical goods, housekeeping, travel, CA audit, film, vehicles, security guards, etc.
 
 Respond ONLY with valid JSON:
 {{
   "score": <0-10 integer>,
   "recommendation": "apply" | "consider" | "skip",
-  "reason": "<one concise sentence>",
+  "reason": "<one sentence: what the RFP needs and why Dhwani is or isn't a fit>",
   "relevant_product": "<mGrant | mForm | mLearn | Custom Dev | Tech Consulting | DaaS | None>",
+  "bd_note": "<one actionable sentence for the BD team: which specific Dhwani product/feature to pitch and why it matches this client's need>",
   "key_requirements": ["<req1>", "<req2>", "<req3>"]
 }}"""
 
@@ -307,6 +316,7 @@ def _score_with_keywords(rfp):
         'recommendation': rec,
         'reason': 'Based on keyword matching (Claude API not configured)',
         'relevant_product': 'Unknown',
+        'bd_note': 'Enable Claude API for detailed product mapping',
         'key_requirements': [],
     }
 
@@ -373,7 +383,7 @@ def generate_excel_report(all_rfps, output_dir):
     ws1.title = "Shortlisted RFPs"
 
     # Title banner
-    ws1.merge_cells('A1:J1')
+    ws1.merge_cells('A1:K1')
     banner = ws1['A1']
     banner.value = f"Dhwani RIS — RFP Scout Results  |  {datetime.now().strftime('%d %B %Y')}"
     banner.font = Font(name='Arial', bold=True, size=14, color=WHITE)
@@ -382,7 +392,7 @@ def generate_excel_report(all_rfps, output_dir):
     ws1.row_dimensions[1].height = 30
 
     # Sub-banner
-    ws1.merge_cells('A2:J2')
+    ws1.merge_cells('A2:K2')
     shortlisted = [r for r in all_rfps
                    if r.get('scoring', {}).get('recommendation') in ('apply', 'consider')]
     apply_n   = sum(1 for r in shortlisted if r.get('scoring', {}).get('recommendation') == 'apply')
@@ -397,14 +407,18 @@ def generate_excel_report(all_rfps, output_dir):
     # Empty row
     ws1.row_dimensions[3].height = 6
 
-    # Headers
+    # Headers — 11 columns including Dhwani Product and BD Note
     COLS_SHORT = [
-        "Rank", "Score\n(/10)", "Recommendation", "Title",
-        "Organization", "Location", "Deadline", "Sector",
-        "Relevant\nProduct", "URL"
+        "Rank", "Score\n(/10)", "Recommendation", "Dhwani\nProduct",
+        "Title", "Organization", "Location", "Deadline",
+        "Why Apply / BD Note", "Scoring Reason", "URL"
     ]
     _style_header_row(ws1, 4, COLS_SHORT)
     ws1.row_dimensions[4].height = 32
+
+    # Highlight the BD Note column header in a distinct colour
+    bd_header = ws1.cell(row=4, column=9)
+    bd_header.fill = PatternFill('solid', fgColor="1A237E")  # deep indigo
 
     # Data rows
     rank = 0
@@ -421,17 +435,18 @@ def generate_excel_report(all_rfps, output_dir):
             rank,
             sc.get('score', 0),
             rec_label,
+            sc.get('relevant_product', ''),
             rfp.get('title', ''),
             rfp.get('organization', ''),
             rfp.get('location', ''),
             rfp.get('deadline', ''),
-            rfp.get('sector', ''),
-            sc.get('relevant_product', ''),
+            sc.get('bd_note', ''),
+            sc.get('reason', ''),
             rfp.get('url', ''),
         ]
         row_num = rank + 4
         _style_data_row(ws1, row_num, row_vals, bg)
-        ws1.row_dimensions[row_num].height = 36
+        ws1.row_dimensions[row_num].height = 50
 
         # Make score bold
         score_cell = ws1.cell(row=row_num, column=2)
@@ -445,17 +460,27 @@ def generate_excel_report(all_rfps, output_dir):
                               color=GREEN_FONT if rec == 'apply' else AMBER_FONT)
         rec_cell.alignment = Alignment(horizontal='center', vertical='top')
 
+        # Dhwani product — bold, coloured
+        prod_cell = ws1.cell(row=row_num, column=4)
+        prod_cell.font = Font(name='Arial', size=9, bold=True, color="1A237E")
+        prod_cell.alignment = Alignment(horizontal='center', vertical='top', wrap_text=True)
+
+        # BD Note — italic, slightly larger
+        bd_cell = ws1.cell(row=row_num, column=9)
+        bd_cell.font = Font(name='Arial', size=9, italic=True, color="1A237E")
+        bd_cell.alignment = Alignment(vertical='top', wrap_text=True)
+
         # URL as hyperlink
         url = rfp.get('url', '')
         if url:
-            url_cell = ws1.cell(row=row_num, column=10)
+            url_cell = ws1.cell(row=row_num, column=11)
             url_cell.value = "View RFP →"
             url_cell.hyperlink = url
             url_cell.font = Font(name='Arial', size=9, color="0066CC",
                                   underline='single')
 
-    # Column widths (Sheet 1)
-    col_widths_s1 = [6, 8, 14, 48, 30, 18, 16, 20, 18, 14]
+    # Column widths (Sheet 1) — 11 cols
+    col_widths_s1 = [6, 8, 14, 16, 44, 28, 16, 14, 48, 40, 12]
     for i, w in enumerate(col_widths_s1, 1):
         ws1.column_dimensions[get_column_letter(i)].width = w
 
@@ -467,7 +492,7 @@ def generate_excel_report(all_rfps, output_dir):
     # ═══════════════════════════════════════════════════════
     ws2 = wb.create_sheet("All RFPs")
 
-    ws2.merge_cells('A1:I1')
+    ws2.merge_cells('A1:K1')
     b2 = ws2['A1']
     b2.value = f"All Scraped RFPs — {datetime.now().strftime('%d %B %Y')}  ({len(all_rfps)} total)"
     b2.font = Font(name='Arial', bold=True, size=12, color=WHITE)
@@ -476,9 +501,9 @@ def generate_excel_report(all_rfps, output_dir):
     ws2.row_dimensions[1].height = 26
 
     COLS_ALL = [
-        "Score\n(/10)", "Recommendation", "Title",
+        "Score\n(/10)", "Recommendation", "Dhwani\nProduct", "Title",
         "Organization", "Location", "Deadline", "Sector",
-        "Reason / Scoring Note", "URL"
+        "BD Note / Why Apply", "Scoring Reason", "URL"
     ]
     _style_header_row(ws2, 2, COLS_ALL)
     ws2.row_dimensions[2].height = 32
@@ -494,26 +519,31 @@ def generate_excel_report(all_rfps, output_dir):
         row_vals = [
             sc.get('score', 0),
             rec.upper(),
+            sc.get('relevant_product', ''),
             rfp.get('title', ''),
             rfp.get('organization', ''),
             rfp.get('location', ''),
             rfp.get('deadline', ''),
             rfp.get('sector', ''),
+            sc.get('bd_note', ''),
             sc.get('reason', ''),
             rfp.get('url', ''),
         ]
         _style_data_row(ws2, row_idx, row_vals, bg)
-        ws2.row_dimensions[row_idx].height = 28
+        ws2.row_dimensions[row_idx].height = 32
 
         # Hyperlink URL
         url = rfp.get('url', '')
         if url:
-            url_cell = ws2.cell(row=row_idx, column=9)
+            url_cell = ws2.cell(row=row_idx, column=11)
             url_cell.value = "View →"
             url_cell.hyperlink = url
             url_cell.font = Font(name='Arial', size=9, color="0066CC", underline='single')
 
-    col_widths_s2 = [8, 14, 48, 30, 18, 16, 20, 45, 10]
+    # Fix Sheet 2 banner merge to 11 cols
+    ws2.merge_cells('A1:K1')
+
+    col_widths_s2 = [8, 14, 16, 44, 28, 16, 14, 18, 46, 40, 10]
     for i, w in enumerate(col_widths_s2, 1):
         ws2.column_dimensions[get_column_letter(i)].width = w
 
