@@ -1,15 +1,12 @@
-name: 🎯 Dhwani RFP Scout
+name: Dhwani RFP Scout
 
 on:
-  # ── Runs every weekday + Saturday at 8:00 AM IST (2:30 AM UTC) ──
   schedule:
     - cron: '30 2 * * 1-6'
-
-  # ── Also allows manual trigger from GitHub UI ──
   workflow_dispatch:
     inputs:
       test_mode:
-        description: 'Test mode (scrape first 3 RFPs only)'
+        description: 'Test mode - scrape first 3 RFPs only'
         required: false
         default: 'false'
         type: boolean
@@ -20,19 +17,17 @@ on:
 
 jobs:
   rfp-scout:
-    name: Scrape · Score · Excel · Email
+    name: Scrape - Score - Excel - Email
     runs-on: ubuntu-latest
     permissions:
       contents: write
 
     steps:
-      # ── 1. Checkout ────────────────────────────────────────────
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      # ── 2. Python setup ────────────────────────────────────────
       - name: Set up Python 3.11
         uses: actions/setup-python@v5
         with:
@@ -42,13 +37,13 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      # ── 3. Run the RFP Scout ───────────────────────────────────
       - name: Run RFP Scout
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          RESEND_API_KEY:    ${{ secrets.RESEND_API_KEY }}
+          EMAIL_RECIPIENTS:  ${{ secrets.EMAIL_RECIPIENTS }}
           EMAIL_SENDER:      ${{ secrets.EMAIL_SENDER }}
           EMAIL_PASSWORD:    ${{ secrets.EMAIL_PASSWORD }}
-          EMAIL_RECIPIENTS:  ${{ secrets.EMAIL_RECIPIENTS }}
           EMAIL_SMTP_HOST:   ${{ secrets.EMAIL_SMTP_HOST }}
           EMAIL_SMTP_PORT:   ${{ secrets.EMAIL_SMTP_PORT }}
         run: |
@@ -61,16 +56,14 @@ jobs:
           fi
           python rfp_scout.py $ARGS
 
-      # ── 4. Commit results back to repo ────────────────────────
       - name: Commit daily results
         run: |
           git config user.name  "Dhwani RFP Bot"
           git config user.email "rfp-scout@dhwaniris.in"
           git add rfp_output/ || true
-          git diff --staged --quiet || git commit -m "📊 RFP digest $(date +'%d %b %Y') — auto-generated"
+          git diff --staged --quiet || git commit -m "RFP digest $(date +'%d %b %Y') - auto-generated"
           git push || echo "Nothing to push"
 
-      # ── 5. Upload results as downloadable artifacts ────────────
       - name: Upload results as artifacts
         uses: actions/upload-artifact@v4
         if: always()
@@ -79,49 +72,24 @@ jobs:
           path: rfp_output/
           retention-days: 30
 
-      # ── 6. Write GitHub Actions job summary ───────────────────
       - name: Write job summary
         if: always()
         run: |
           TODAY=$(date +'%d %B %Y')
-          echo "## 🎯 Dhwani RFP Scout — $TODAY" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-
-          # Write the Python helper to a temp file (avoids heredoc variable issues)
-          cat > /tmp/rfp_summary.py << 'PYEOF'
-import json, sys
-log_path = sys.argv[1] if len(sys.argv) > 1 else ''
-try:
-    with open(log_path) as f:
-        data = json.load(f)
-    for r in data.get('rfps', []):
-        if r.get('recommendation') in ('apply', 'consider'):
-            score    = r.get('score', 0)
-            rec_icon = '\u2705' if r['recommendation'] == 'apply' else '\U0001f914'
-            title    = r.get('title', '')[:55]
-            org      = r.get('organization', '')[:40]
-            deadline = r.get('deadline', 'N/A')
-            url      = r.get('url', '#')
-            print(f"| {score}/10 | {rec_icon} {r['recommendation'].upper()} | [{title}]({url}) | {org} | {deadline} |")
-except Exception as e:
-    print(f"<!-- summary error: {e} -->")
-PYEOF
-
           LOG=$(ls rfp_output/*/rfp_run_log.json 2>/dev/null | tail -1)
+          echo "## Dhwani RFP Scout - $TODAY" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
           if [ -f "$LOG" ]; then
             TOTAL=$(python3 -c "import json; d=json.load(open('$LOG')); print(d.get('total_scraped',0))")
             RELEVANT=$(python3 -c "import json; d=json.load(open('$LOG')); print(d.get('relevant_count',0))")
-
             echo "| Metric | Value |" >> $GITHUB_STEP_SUMMARY
             echo "|--------|-------|" >> $GITHUB_STEP_SUMMARY
-            echo "| RFPs scraped today | $TOTAL |" >> $GITHUB_STEP_SUMMARY
-            echo "| Shortlisted (score >= 5) | $RELEVANT |" >> $GITHUB_STEP_SUMMARY
+            echo "| RFPs scraped | $TOTAL |" >> $GITHUB_STEP_SUMMARY
+            echo "| Shortlisted | $RELEVANT |" >> $GITHUB_STEP_SUMMARY
             echo "" >> $GITHUB_STEP_SUMMARY
-            echo "### Shortlisted RFPs" >> $GITHUB_STEP_SUMMARY
-            echo "" >> $GITHUB_STEP_SUMMARY
-            echo "| Score | Recommendation | Title | Organization | Deadline |" >> $GITHUB_STEP_SUMMARY
-            echo "|-------|---------------|-------|-------------|---------|" >> $GITHUB_STEP_SUMMARY
-            python3 /tmp/rfp_summary.py "$LOG" >> $GITHUB_STEP_SUMMARY
+            echo "| Score | Rec | Title | Organization | Deadline |" >> $GITHUB_STEP_SUMMARY
+            echo "|-------|-----|-------|--------------|----------|" >> $GITHUB_STEP_SUMMARY
+            python3 scripts/rfp_summary.py "$LOG" >> $GITHUB_STEP_SUMMARY
           else
-            echo "⚠️ No log file found — check run logs for details." >> $GITHUB_STEP_SUMMARY
+            echo "No log file found." >> $GITHUB_STEP_SUMMARY
           fi
