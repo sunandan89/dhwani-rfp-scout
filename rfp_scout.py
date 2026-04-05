@@ -178,6 +178,10 @@ def scrape_devnetjobsindia(test_mode=False):
         except Exception as e:
             logging.warning(f"Could not fetch detail for '{rfp['title'][:40]}': {e}")
 
+    # Enrich deadline/sector from description text where missing
+    for rfp in rfps:
+        _enrich_from_description(rfp)
+
     return rfps
 
 
@@ -192,6 +196,32 @@ def _extract_devnet_description(html):
         text = re.sub(r'\n{3,}', '\n\n', text)
         return text[:4000]
     return soup.get_text(separator='\n', strip=True)[:3000]
+
+
+def _enrich_from_description(rfp):
+    """Fill in missing deadline / sector by parsing the full_description text."""
+    desc = rfp.get('full_description') or ''
+    if not desc:
+        return
+
+    # Deadline — common patterns on DevNetJobsIndia detail pages
+    if not rfp.get('deadline'):
+        patterns = [
+            r'(?:Last\s+Date|Deadline|Closing\s+Date|Due\s+Date)\s*[:\-]\s*([0-9]{1,2}[\-/][A-Za-z0-9]{2,3}[\-/][0-9]{2,4})',
+            r'(?:Last\s+Date|Deadline|Closing\s+Date|Due\s+Date)\s*[:\-]\s*([A-Za-z]+\s+\d{1,2},?\s+\d{4})',
+            r'(?:Last\s+Date|Deadline|Closing\s+Date|Due\s+Date)\s*[:\-]\s*(\d{1,2}\s+[A-Za-z]+\s+\d{4})',
+        ]
+        for pat in patterns:
+            m = re.search(pat, desc, re.IGNORECASE)
+            if m:
+                rfp['deadline'] = m.group(1).strip()
+                break
+
+    # Sector — look for "Sector(s): ..." line
+    if not rfp.get('sector'):
+        m = re.search(r'Sector[s]?\s*[:\-]\s*([^\n]{3,80})', desc, re.IGNORECASE)
+        if m:
+            rfp['sector'] = m.group(1).strip()
 
 
 def try_scrape_devex(config):
@@ -327,9 +357,8 @@ def _score_with_keywords(rfp):
 
 def generate_excel_report(all_rfps, output_dir):
     """
-    Generate a branded Excel report with two sheets:
-      • Shortlisted  — RFPs recommended to apply or consider
-      • All RFPs     — Everything scraped with scores
+    Generate a single-sheet branded Excel report — all RFPs sorted by score,
+    colour-coded green (apply), amber (consider), grey (skip).
     Returns path to the saved .xlsx file, or None if openpyxl is unavailable.
     """
     if not OPENPYXL_AVAILABLE:
@@ -345,13 +374,14 @@ def generate_excel_report(all_rfps, output_dir):
     # ── Colour palette ──────────────────────────────────────
     RED_DARK   = "8B0000"
     RED        = "C00000"
+    INDIGO     = "1A237E"
     WHITE      = "FFFFFF"
     GREEN_BG   = "E8F5E9"
     GREEN_FONT = "1B5E20"
     AMBER_BG   = "FFF8E1"
     AMBER_FONT = "E65100"
     GREY_BG    = "F5F5F5"
-    HEADER_BG  = "C00000"
+    GREY_FONT  = "757575"
 
     thin_border = Border(
         left=Side(style='thin', color='D0D0D0'),
@@ -360,165 +390,68 @@ def generate_excel_report(all_rfps, output_dir):
         bottom=Side(style='thin', color='D0D0D0'),
     )
 
-    def _style_header_row(ws, row_num, columns):
-        for col_num, header in enumerate(columns, 1):
-            cell = ws.cell(row=row_num, column=col_num, value=header)
-            cell.font = Font(name='Arial', bold=True, color=WHITE, size=10)
-            cell.fill = PatternFill('solid', fgColor=HEADER_BG)
-            cell.alignment = Alignment(horizontal='center', vertical='center', wrap_text=True)
-            cell.border = thin_border
+    NCOLS = 11  # total columns
 
-    def _style_data_row(ws, row_num, values, bg_color):
-        for col_num, val in enumerate(values, 1):
-            cell = ws.cell(row=row_num, column=col_num, value=val)
-            cell.font = Font(name='Arial', size=9)
-            cell.fill = PatternFill('solid', fgColor=bg_color)
-            cell.alignment = Alignment(vertical='top', wrap_text=True)
-            cell.border = thin_border
+    ws = wb.active
+    ws.title = "RFP Scout Results"
 
-    # ═══════════════════════════════════════════════════════
-    #  SHEET 1 — Shortlisted RFPs
-    # ═══════════════════════════════════════════════════════
-    ws1 = wb.active
-    ws1.title = "Shortlisted RFPs"
-
-    # Title banner
-    ws1.merge_cells('A1:K1')
-    banner = ws1['A1']
-    banner.value = f"Dhwani RIS — RFP Scout Results  |  {datetime.now().strftime('%d %B %Y')}"
+    # ── Banner row ──────────────────────────────────────────
+    ws.merge_cells(f'A1:{get_column_letter(NCOLS)}1')
+    banner = ws['A1']
+    banner.value = f"Dhwani RIS — RFP Scout  |  {datetime.now().strftime('%d %B %Y')}"
     banner.font = Font(name='Arial', bold=True, size=14, color=WHITE)
     banner.fill = PatternFill('solid', fgColor=RED_DARK)
     banner.alignment = Alignment(horizontal='center', vertical='center')
-    ws1.row_dimensions[1].height = 30
+    ws.row_dimensions[1].height = 32
 
-    # Sub-banner
-    ws1.merge_cells('A2:K2')
-    shortlisted = [r for r in all_rfps
-                   if r.get('scoring', {}).get('recommendation') in ('apply', 'consider')]
-    apply_n   = sum(1 for r in shortlisted if r.get('scoring', {}).get('recommendation') == 'apply')
-    consider_n = len(shortlisted) - apply_n
-    sub = ws1['A2']
-    sub.value = (f"✅ {apply_n} to Apply   🤔 {consider_n} to Consider   "
-                 f"📋 {len(all_rfps)} total scraped")
-    sub.font = Font(name='Arial', size=10, bold=True, color=RED)
-    sub.alignment = Alignment(horizontal='center', vertical='center')
-    ws1.row_dimensions[2].height = 20
+    # ── Stats row ───────────────────────────────────────────
+    apply_n   = sum(1 for r in all_rfps if r.get('scoring', {}).get('recommendation') == 'apply')
+    consider_n = sum(1 for r in all_rfps if r.get('scoring', {}).get('recommendation') == 'consider')
+    skip_n    = len(all_rfps) - apply_n - consider_n
+    ws.merge_cells(f'A2:{get_column_letter(NCOLS)}2')
+    stats = ws['A2']
+    stats.value = (f"✅ {apply_n} to Apply   🤔 {consider_n} to Consider   "
+                   f"⏭ {skip_n} Skip   |   📋 {len(all_rfps)} total scraped   "
+                   f"  🟢 Green = Apply   🟡 Amber = Consider   ⬜ Grey = Skip")
+    stats.font = Font(name='Arial', size=9, bold=True, color=RED)
+    stats.alignment = Alignment(horizontal='center', vertical='center')
+    ws.row_dimensions[2].height = 18
 
-    # Empty row
-    ws1.row_dimensions[3].height = 6
+    # ── Spacer ───────────────────────────────────────────────
+    ws.row_dimensions[3].height = 4
 
-    # Headers — 11 columns including Dhwani Product and BD Note
-    COLS_SHORT = [
-        "Rank", "Score\n(/10)", "Recommendation", "Dhwani\nProduct",
-        "Title", "Organization", "Location", "Deadline",
+    # ── Column headers ───────────────────────────────────────
+    COLS = [
+        "Score\n(/10)", "Rec.", "Dhwani\nProduct",
+        "Title", "Organization", "Location", "Deadline", "Sector",
         "Why Apply / BD Note", "Scoring Reason", "URL"
     ]
-    _style_header_row(ws1, 4, COLS_SHORT)
-    ws1.row_dimensions[4].height = 32
+    for col_num, header in enumerate(COLS, 1):
+        cell = ws.cell(row=4, column=col_num, value=header)
+        # BD Note header gets distinct indigo colour
+        bg = INDIGO if col_num == 9 else RED
+        cell.font = Font(name='Arial', bold=True, color=WHITE, size=10)
+        cell.fill = PatternFill('solid', fgColor=bg)
+        cell.alignment = Alignment(horizontal='center', vertical='center', wrap_text=True)
+        cell.border = thin_border
+    ws.row_dimensions[4].height = 34
 
-    # Highlight the BD Note column header in a distinct colour
-    bd_header = ws1.cell(row=4, column=9)
-    bd_header.fill = PatternFill('solid', fgColor="1A237E")  # deep indigo
+    # ── Data rows (sorted by score desc) ────────────────────
+    sorted_rfps = sorted(all_rfps,
+                         key=lambda r: r.get('scoring', {}).get('score', 0), reverse=True)
 
-    # Data rows
-    rank = 0
-    for rfp in sorted(shortlisted,
-                      key=lambda r: r.get('scoring', {}).get('score', 0), reverse=True):
-        sc  = rfp.get('scoring', {})
-        rec = sc.get('recommendation', 'consider')
-        rank += 1
-
-        bg = GREEN_BG if rec == 'apply' else AMBER_BG
-        rec_label = "✅ APPLY" if rec == 'apply' else "🤔 CONSIDER"
-
-        row_vals = [
-            rank,
-            sc.get('score', 0),
-            rec_label,
-            sc.get('relevant_product', ''),
-            rfp.get('title', ''),
-            rfp.get('organization', ''),
-            rfp.get('location', ''),
-            rfp.get('deadline', ''),
-            sc.get('bd_note', ''),
-            sc.get('reason', ''),
-            rfp.get('url', ''),
-        ]
-        row_num = rank + 4
-        _style_data_row(ws1, row_num, row_vals, bg)
-        ws1.row_dimensions[row_num].height = 50
-
-        # Make score bold
-        score_cell = ws1.cell(row=row_num, column=2)
-        score_cell.font = Font(name='Arial', size=10, bold=True,
-                               color=GREEN_FONT if rec == 'apply' else AMBER_FONT)
-        score_cell.alignment = Alignment(horizontal='center', vertical='top')
-
-        # Make rec bold
-        rec_cell = ws1.cell(row=row_num, column=3)
-        rec_cell.font = Font(name='Arial', size=9, bold=True,
-                              color=GREEN_FONT if rec == 'apply' else AMBER_FONT)
-        rec_cell.alignment = Alignment(horizontal='center', vertical='top')
-
-        # Dhwani product — bold, coloured
-        prod_cell = ws1.cell(row=row_num, column=4)
-        prod_cell.font = Font(name='Arial', size=9, bold=True, color="1A237E")
-        prod_cell.alignment = Alignment(horizontal='center', vertical='top', wrap_text=True)
-
-        # BD Note — italic, slightly larger
-        bd_cell = ws1.cell(row=row_num, column=9)
-        bd_cell.font = Font(name='Arial', size=9, italic=True, color="1A237E")
-        bd_cell.alignment = Alignment(vertical='top', wrap_text=True)
-
-        # URL as hyperlink
-        url = rfp.get('url', '')
-        if url:
-            url_cell = ws1.cell(row=row_num, column=11)
-            url_cell.value = "View RFP →"
-            url_cell.hyperlink = url
-            url_cell.font = Font(name='Arial', size=9, color="0066CC",
-                                  underline='single')
-
-    # Column widths (Sheet 1) — 11 cols
-    col_widths_s1 = [6, 8, 14, 16, 44, 28, 16, 14, 48, 40, 12]
-    for i, w in enumerate(col_widths_s1, 1):
-        ws1.column_dimensions[get_column_letter(i)].width = w
-
-    # Freeze panes below header
-    ws1.freeze_panes = 'A5'
-
-    # ═══════════════════════════════════════════════════════
-    #  SHEET 2 — All Scraped RFPs
-    # ═══════════════════════════════════════════════════════
-    ws2 = wb.create_sheet("All RFPs")
-
-    ws2.merge_cells('A1:K1')
-    b2 = ws2['A1']
-    b2.value = f"All Scraped RFPs — {datetime.now().strftime('%d %B %Y')}  ({len(all_rfps)} total)"
-    b2.font = Font(name='Arial', bold=True, size=12, color=WHITE)
-    b2.fill = PatternFill('solid', fgColor=RED_DARK)
-    b2.alignment = Alignment(horizontal='center', vertical='center')
-    ws2.row_dimensions[1].height = 26
-
-    COLS_ALL = [
-        "Score\n(/10)", "Recommendation", "Dhwani\nProduct", "Title",
-        "Organization", "Location", "Deadline", "Sector",
-        "BD Note / Why Apply", "Scoring Reason", "URL"
-    ]
-    _style_header_row(ws2, 2, COLS_ALL)
-    ws2.row_dimensions[2].height = 32
-
-    for row_idx, rfp in enumerate(
-            sorted(all_rfps, key=lambda r: r.get('scoring', {}).get('score', 0), reverse=True),
-            start=3):
+    for row_idx, rfp in enumerate(sorted_rfps, start=5):
         sc  = rfp.get('scoring', {})
         rec = sc.get('recommendation', 'skip')
-        bg = (GREEN_BG if rec == 'apply'
-              else (AMBER_BG if rec == 'consider' else GREY_BG))
+
+        bg        = GREEN_BG  if rec == 'apply'   else (AMBER_BG if rec == 'consider' else GREY_BG)
+        score_col = GREEN_FONT if rec == 'apply'  else (AMBER_FONT if rec == 'consider' else GREY_FONT)
+        rec_label = ("✅ APPLY" if rec == 'apply'
+                     else ("🤔 CONSIDER" if rec == 'consider' else "⏭ SKIP"))
 
         row_vals = [
             sc.get('score', 0),
-            rec.upper(),
+            rec_label,
             sc.get('relevant_product', ''),
             rfp.get('title', ''),
             rfp.get('organization', ''),
@@ -529,25 +462,48 @@ def generate_excel_report(all_rfps, output_dir):
             sc.get('reason', ''),
             rfp.get('url', ''),
         ]
-        _style_data_row(ws2, row_idx, row_vals, bg)
-        ws2.row_dimensions[row_idx].height = 32
 
-        # Hyperlink URL
+        for col_num, val in enumerate(row_vals, 1):
+            cell = ws.cell(row=row_idx, column=col_num, value=val)
+            cell.fill = PatternFill('solid', fgColor=bg)
+            cell.alignment = Alignment(vertical='top', wrap_text=True)
+            cell.border = thin_border
+            cell.font = Font(name='Arial', size=9)
+
+        # Score — large, bold, coloured
+        ws.cell(row=row_idx, column=1).font = Font(name='Arial', size=11, bold=True, color=score_col)
+        ws.cell(row=row_idx, column=1).alignment = Alignment(horizontal='center', vertical='top')
+
+        # Rec — bold, coloured
+        ws.cell(row=row_idx, column=2).font = Font(name='Arial', size=9, bold=True, color=score_col)
+        ws.cell(row=row_idx, column=2).alignment = Alignment(horizontal='center', vertical='top')
+
+        # Dhwani product — bold indigo
+        ws.cell(row=row_idx, column=3).font = Font(name='Arial', size=9, bold=True, color=INDIGO)
+        ws.cell(row=row_idx, column=3).alignment = Alignment(horizontal='center', vertical='top', wrap_text=True)
+
+        # BD Note — italic indigo (only for apply/consider)
+        if rec in ('apply', 'consider'):
+            ws.cell(row=row_idx, column=9).font = Font(name='Arial', size=9, italic=True, color=INDIGO)
+
+        # URL as hyperlink
         url = rfp.get('url', '')
         if url:
-            url_cell = ws2.cell(row=row_idx, column=11)
+            url_cell = ws.cell(row=row_idx, column=11)
             url_cell.value = "View →"
             url_cell.hyperlink = url
             url_cell.font = Font(name='Arial', size=9, color="0066CC", underline='single')
 
-    # Fix Sheet 2 banner merge to 11 cols
-    ws2.merge_cells('A1:K1')
+        # Row height: taller for apply/consider (more text), compact for skip
+        ws.row_dimensions[row_idx].height = 50 if rec in ('apply', 'consider') else 28
 
-    col_widths_s2 = [8, 14, 16, 44, 28, 16, 14, 18, 46, 40, 10]
-    for i, w in enumerate(col_widths_s2, 1):
-        ws2.column_dimensions[get_column_letter(i)].width = w
+    # ── Column widths ────────────────────────────────────────
+    col_widths = [8, 13, 16, 46, 28, 16, 14, 18, 50, 42, 10]
+    for i, w in enumerate(col_widths, 1):
+        ws.column_dimensions[get_column_letter(i)].width = w
 
-    ws2.freeze_panes = 'A3'
+    # Freeze top 4 rows (banner + stats + spacer + headers)
+    ws.freeze_panes = 'A5'
 
     wb.save(str(filepath))
     logging.info(f"Excel report saved: {filepath}")
