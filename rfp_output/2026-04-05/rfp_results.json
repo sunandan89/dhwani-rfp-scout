@@ -16,6 +16,7 @@
       "recommendation": "skip",
       "reason": "Based on keyword matching (Claude API not configured)",
       "relevant_product": "Unknown",
+      "bd_note": "Enable Claude API for detailed product mapping",
       "key_requirements": []
     }
   },
@@ -36,6 +37,7 @@
       "recommendation": "skip",
       "reason": "Based on keyword matching (Claude API not configured)",
       "relevant_product": "Unknown",
+      "bd_note": "Enable Claude API for detailed product mapping",
       "key_requirements": []
     }
   },
@@ -56,6 +58,7 @@
       "recommendation": "apply",
       "reason": "Based on keyword matching (Claude API not configured)",
       "relevant_product": "Unknown",
+      "bd_note": "Enable Claude API for detailed product mapping",
       "key_requirements": []
     }
   },
@@ -76,6 +79,7 @@
       "recommendation": "apply",
       "reason": "Based on keyword matching (Claude API not configured)",
       "relevant_product": "Unknown",
+      "bd_note": "Enable Claude API for detailed product mapping",
       "key_requirements": []
     }
   },
@@ -96,6 +100,7 @@
       "recommendation": "skip",
       "reason": "Based on keyword matching (Claude API not configured)",
       "relevant_product": "Unknown",
+      "bd_note": "Enable Claude API for detailed product mapping",
       "key_requirements": []
     }
   },
@@ -116,6 +121,7 @@
       "recommendation": "skip",
       "reason": "Based on keyword matching (Claude API not configured)",
       "relevant_product": "Unknown",
+      "bd_note": "Enable Claude API for detailed product mapping",
       "key_requirements": []
     }
   },
@@ -136,6 +142,7 @@
       "recommendation": "skip",
       "reason": "Based on keyword matching (Claude API not configured)",
       "relevant_product": "Unknown",
+      "bd_note": "Enable Claude API for detailed product mapping",
       "key_requirements": []
     }
   },
@@ -156,6 +163,7 @@
       "recommendation": "skip",
       "reason": "Based on keyword matching (Claude API not configured)",
       "relevant_product": "Unknown",
+      "bd_note": "Enable Claude API for detailed product mapping",
       "key_requirements": []
     }
   },
@@ -176,6 +184,7 @@
       "recommendation": "apply",
       "reason": "Based on keyword matching (Claude API not configured)",
       "relevant_product": "Unknown",
+      "bd_note": "Enable Claude API for detailed product mapping",
       "key_requirements": []
     }
   },
@@ -196,6 +205,7 @@
       "recommendation": "consider",
       "reason": "Based on keyword matching (Claude API not configured)",
       "relevant_product": "Unknown",
+      "bd_note": "Enable Claude API for detailed product mapping",
       "key_requirements": []
     }
   },
@@ -216,6 +226,7 @@
       "recommendation": "skip",
       "reason": "Based on keyword matching (Claude API not configured)",
       "relevant_product": "Unknown",
+      "bd_note": "Enable Claude API for detailed product mapping",
       "key_requirements": []
     }
   },
@@ -236,6 +247,7 @@
       "recommendation": "consider",
       "reason": "Based on keyword matching (Claude API not configured)",
       "relevant_product": "Unknown",
+      "bd_note": "Enable Claude API for detailed product mapping",
       "key_requirements": []
     }
   },
@@ -256,6 +268,7 @@
       "recommendation": "apply",
       "reason": "Based on keyword matching (Claude API not configured)",
       "relevant_product": "Unknown",
+      "bd_note": "Enable Claude API for detailed product mapping",
       "key_requirements": []
     }
   },
@@ -276,6 +289,7 @@
       "recommendation": "skip",
       "reason": "Based on keyword matching (Claude API not configured)",
       "relevant_product": "Unknown",
+      "bd_note": "Enable Claude API for detailed product mapping",
       "key_requirements": []
     }
   },
@@ -296,6 +310,7 @@
       "recommendation": "skip",
       "reason": "Based on keyword matching (Claude API not configured)",
       "relevant_product": "Unknown",
+      "bd_note": "Enable Claude API for detailed product mapping",
       "key_requirements": []
     }
   },
@@ -316,6 +331,7 @@
       "recommendation": "skip",
       "reason": "Based on keyword matching (Claude API not configured)",
       "relevant_product": "Unknown",
+      "bd_note": "Enable Claude API for detailed product mapping",
       "key_requirements": []
     }
   },
@@ -336,6 +352,7 @@
       "recommendation": "skip",
       "reason": "Based on keyword matching (Claude API not configured)",
       "relevant_product": "Unknown",
+      "bd_note": "Enable Claude API for detailed product mapping",
       "key_requirements": []
     }
   },
@@ -356,6 +373,7 @@
       "recommendation": "consider",
       "reason": "Based on keyword matching (Claude API not configured)",
       "relevant_product": "Unknown",
+      "bd_note": "Enable Claude API for detailed product mapping",
       "key_requirements": []
     }
   },
@@ -376,6 +394,7 @@
       "recommendation": "skip",
       "reason": "Based on keyword matching (Claude API not configured)",
       "relevant_product": "Unknown",
+      "bd_note": "Enable Claude API for detailed product mapping",
       "key_requirements": []
     }
   },
@@ -396,6 +415,7 @@
       "recommendation": "skip",
       "reason": "Based on keyword matching (Claude API not configured)",
       "relevant_product": "Unknown",
+      "bd_note": "Enable Claude API for detailed product mapping",
       "key_requirements": []
     }
   },
@@ -416,6 +436,7 @@
       "recommendation": "skip",
       "reason": "Based on keyword matching (Claude API not configured)",
       "relevant_product": "Unknown",
+      "bd_note": "Enable Claude API for detailed product mapping",
       "key_requirements": []
     }
   },
@@ -436,6 +457,7 @@
       "recommendation": "skip",
       "reason": "Based on keyword matching (Claude API not configured)",
       "relevant_product": "Unknown",
+      "bd_note": "Enable Claude API for detailed product mapping",
       "key_requirements": []
     }
   },
@@ -456,6 +478,7 @@
       "recommendation": "consider",
       "reason": "Based on keyword matching (Claude API not configured)",
       "relevant_product": "Unknown",
+      "bd_note": "Enable Claude API for detailed product mapping",
       "key_requirements": []
     }
   },
@@ -476,6 +499,7 @@
       "recommendation": "skip",
       "reason": "Based on keyword matching (Claude API not configured)",
       "relevant_product": "Unknown",
+      "bd_note": "Enable Claude API for detailed product mapping",
       "key_requirements": []
     }
   },
@@ -496,6 +520,7 @@
       "recommendation": "apply",
       "reason": "Based on keyword matching (Claude API not configured)",
       "relevant_product": "Unknown",
+      "bd_note": "Enable Claude API for detailed product mapping",
       "key_requirements": []
     }
   },
@@ -516,6 +541,7 @@
       "recommendation": "apply",
       "reason": "Based on keyword matching (Claude API not configured)",
       "relevant_product": "Unknown",
+      "bd_note": "Enable Claude API for detailed product mapping",
       "key_requirements": []
     }
   },
@@ -536,6 +562,7 @@
       "recommendation": "skip",
       "reason": "Based on keyword matching (Claude API not configured)",
       "relevant_product": "Unknown",
+      "bd_note": "Enable Claude API for detailed product mapping",
       "key_requirements": []
     }
   }
