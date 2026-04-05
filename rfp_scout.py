@@ -132,7 +132,7 @@ def scrape_devnetjobsindia(test_mode=False):
             if match:
                 postback_target = match.group(1)
 
-        rfps.append({
+        rfps.append(
             'title': title,
             'organization': org,
             'location': location,
@@ -760,7 +760,7 @@ def main():
     today_out.mkdir(parents=True, exist_ok=True)
 
     # Claude client (optional — for smarter scoring)
-    api_key = config.get('anthropic_api_key') or os.environ.get('ANTHROPIC_API_KEY')
+    api_key = os.environ.get('ANTHROPIC_API_KEY') or config.get('anthropic_api_key')
     claude_client = None
     if ANTHROPIC_AVAILABLE and api_key and 'YOUR_ANTHROPIC' not in api_key:
         claude_client = anthropic.Anthropic(api_key=api_key)
