@@ -528,6 +528,54 @@ def generate_excel_report(all_rfps, output_dir):
 #  EMAIL DIGEST
 # ─────────────────────────────────────────────
 
+def _send_via_resend(api_key, recipients, html, excel_file,
+                     apply_count, consider_count, today_str, digest_path):
+    """
+    Send email via Resend API (resend.com).
+    No SMTP credentials needed — just a RESEND_API_KEY.
+    Free tier: 100 emails/day, 3,000/month.
+    Sign up at https://resend.com — takes 2 minutes.
+    """
+    import base64
+
+    payload = {
+        "from":    "Dhwani RFP Scout <onboarding@resend.dev>",
+        "to":      recipients,
+        "subject": f"[RFP Scout] {apply_count} to Apply, {consider_count} to Consider — {today_str}",
+        "html":    html,
+    }
+
+    # Attach Excel if available
+    if excel_file and Path(excel_file).exists():
+        with open(excel_file, 'rb') as f:
+            b64 = base64.b64encode(f.read()).decode()
+        payload["attachments"] = [{
+            "filename": Path(excel_file).name,
+            "content":  b64,
+        }]
+        logging.info(f"  → Attaching Excel: {Path(excel_file).name}")
+
+    try:
+        resp = requests.post(
+            "https://api.resend.com/emails",
+            headers={
+                "Authorization": f"Bearer {api_key}",
+                "Content-Type":  "application/json",
+            },
+            json=payload,
+            timeout=20,
+        )
+        if resp.status_code in (200, 201):
+            data = resp.json()
+            logging.info(f"✉ Email sent via Resend — ID: {data.get('id','?')}")
+        else:
+            logging.error(f"Resend error {resp.status_code}: {resp.text[:200]}")
+    except Exception as e:
+        logging.error(f"Resend send failed: {e}")
+
+    return str(digest_path)
+
+
 def send_email_digest(relevant_rfps, config, output_dir, excel_file=None):
     """
     Build and send the daily digest email.
@@ -626,6 +674,18 @@ def send_email_digest(relevant_rfps, config, output_dir, excel_file=None):
     if env_smtp_port:  email_cfg['smtp_port']    = int(env_smtp_port)
     if env_sender and env_password and env_recipients:
         email_cfg['enabled'] = True
+
+    # ── Try Resend first (API-key only, no SMTP password needed) ──
+    resend_key = os.environ.get('RESEND_API_KEY') or config.get('resend_api_key', '')
+    resend_recipients = (
+        [r.strip() for r in os.environ.get('EMAIL_RECIPIENTS', '').split(',') if r.strip()]
+        or config.get('email', {}).get('recipients', [])
+    )
+    if resend_key and resend_recipients:
+        return _send_via_resend(
+            resend_key, resend_recipients, html, excel_file,
+            apply_count, consider_count, today_str, digest_path
+        )
 
     if not email_cfg.get('enabled'):
         logging.info("Email not enabled. Digest saved to output folder only.")
