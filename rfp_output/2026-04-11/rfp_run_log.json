@@ -1,0 +1,398 @@
+{
+  "run_date": "2026-04-11T04:36:23.546085",
+  "total_scraped": 39,
+  "relevant_count": 11,
+  "proposals_drafted": 0,
+  "rfps": [
+    {
+      "title": "RFP - Hiring of an agency/individual for the design, development, and depl...",
+      "organization": "India Health Action Trust (IHAT)",
+      "deadline": "",
+      "score": 5,
+      "recommendation": "consider",
+      "reason": "RFP requires interactive microsite design and deployment for gender integration documentation — a web development project with storytelling/content focus rather than Dhwani's core data systems, MIS, or grant management strengths, though it touches the health & gender sectors Dhwani serves.",
+      "url": "https://devnetjobsindia.org/JobDescription.aspx?Job_Id=289582",
+      "has_proposal": false
+    },
+    {
+      "title": "RFQ - Passive Solar Greenhouse for Vegetable Cultivation in Khaltsi/Saspol...",
+      "organization": "Partnering Hope into Action (PHIA) Foundation",
+      "deadline": "",
+      "score": 1,
+      "recommendation": "skip",
+      "reason": "This RFP is for physical infrastructure (passive solar greenhouse construction) in agriculture, not a technology/software/data management solution that Dhwani specializes in.",
+      "url": "https://devnetjobsindia.org/JobDescription.aspx?Job_Id=289579",
+      "has_proposal": false
+    },
+    {
+      "title": "RFP - For Final External Evaluation of Two Projects -IN2290_Ensuring Overa...",
+      "organization": "Fundación Educación Y Cooperación (Educo)",
+      "deadline": "",
+      "score": 2,
+      "recommendation": "skip",
+      "reason": "This RFP is for external evaluation services (research/assessment), not technology development—Dhwani is a tech vendor, not an evaluation consultancy.",
+      "url": "https://devnetjobsindia.org/JobDescription.aspx?Job_Id=289522",
+      "has_proposal": false
+    },
+    {
+      "title": "RFQ - Supply, Installation, Commissioning and Handover of Sewerage Pipe la...",
+      "organization": "WaterAid India",
+      "deadline": "",
+      "score": 0,
+      "recommendation": "skip",
+      "reason": "This RFQ is for physical infrastructure (sewerage pipe supply, installation, and biodigester commissioning) — not a technology or software procurement, and entirely outside Dhwani's ICT4D scope.",
+      "url": "https://devnetjobsindia.org/JobDescription.aspx?Job_Id=288575",
+      "has_proposal": false
+    },
+    {
+      "title": "RFP - On-Call Taxi Services for Raipur (Chhattisgarh) Local & Outstation T...",
+      "organization": "Jhpiego",
+      "deadline": "",
+      "score": 0,
+      "recommendation": "skip",
+      "reason": "This RFP is for on-call taxi/transportation services in Raipur — a logistics and vendor management requirement with no software, data, health IT, or digital transformation component that aligns with Dhwani's ICT4D capabilities.",
+      "url": "https://www.devnetjobsindia.org/JobDescription.aspx?Job_Id=289066",
+      "has_proposal": false
+    },
+    {
+      "title": "RFP -  For Engagement of Consultant for Micro-Watershed Study, GIS Mapping...",
+      "organization": "Parmarth Samaj Sevi Sansthan",
+      "deadline": "",
+      "score": 2,
+      "recommendation": "skip",
+      "reason": "RFP requires specialized GIS mapping, watershed hydrology, and biodiversity field surveys—domain expertise in geospatial science and environmental engineering, not Dhwani's core IT/data management strength.",
+      "url": "https://www.devnetjobsindia.org/JobDescription.aspx?Job_Id=289541",
+      "has_proposal": false
+    },
+    {
+      "title": "RFP - Hiring vendor/vendors for Airtel and TATA lease line at Jhpiego Delh...",
+      "organization": "Jhpiego",
+      "deadline": "",
+      "score": 0,
+      "recommendation": "skip",
+      "reason": "RFP is for telecom lease line vendor procurement (Airtel & TATA connectivity)—a pure infrastructure/ISP service with no IT development, software, or digital transformation scope.",
+      "url": "https://www.devnetjobsindia.org/JobDescription.aspx?Job_Id=289546",
+      "has_proposal": false
+    },
+    {
+      "title": "RFP - Passive Solar Greenhouse for Vegetable Cultivation in Nubra Region",
+      "organization": "Partnering Hope into Action (PHIA) Foundation",
+      "deadline": "",
+      "score": 2,
+      "recommendation": "skip",
+      "reason": "This RFP is primarily for physical infrastructure (passive solar greenhouse design, construction, and installation) in agriculture—not a digital/IT project where Dhwani's core competencies lie.",
+      "url": "https://devnetjobsindia.org/JobDescription.aspx?Job_Id=289506",
+      "has_proposal": false
+    },
+    {
+      "title": "RFP - Procurement of HRMS Solution and Implementation Agency for JSIPL",
+      "organization": "John Snow India Private Limited (JSIPL)",
+      "deadline": "20 April 2026",
+      "score": 2,
+      "recommendation": "skip",
+      "reason": "JSIPL is seeking an HRMS (Human Resource Management System) for internal HR/payroll/administration — a corporate HR function outside Dhwani's core social sector program/grant management and field-level data collection focus.",
+      "url": "https://devnetjobsindia.org/JobDescription.aspx?Job_Id=289493",
+      "has_proposal": false
+    },
+    {
+      "title": "RFP - Empanelment of Design Agency for AKF (India)",
+      "organization": "Aga Khan Foundation (India)",
+      "deadline": "",
+      "score": 1,
+      "recommendation": "skip",
+      "reason": "This RFP seeks a design agency for creative/communications work (branding, visual design, content design), which is outside Dhwani's core IT/software development competency.",
+      "url": "https://devnetjobsindia.org/JobDescription.aspx?Job_Id=289471",
+      "has_proposal": false
+    },
+    {
+      "title": "RFP - Provision of Identity, Access & Device Management Solution (JumpClou...",
+      "organization": "Lords Education and Health Society (LEHS)",
+      "deadline": "",
+      "score": 1,
+      "recommendation": "skip",
+      "reason": "This RFP is for JumpCloud Identity & Access Management (IAM) and Mobile Device Management (MDM) implementation — enterprise IT infrastructure work completely outside Dhwani's core competency in social sector software, grant management, and development programme tracking.",
+      "url": "https://www.devnetjobsindia.org/JobDescription.aspx?Job_Id=289504",
+      "has_proposal": false
+    },
+    {
+      "title": "RFQ-Outsourced Manpower Services (Housekeeping, MTS, Security & Drivers)",
+      "organization": "Coalition for Disaster Resilient Infrastructure (CDRI)",
+      "deadline": "",
+      "score": 0,
+      "recommendation": "skip",
+      "reason": "This RFQ is for outsourced non-IT manpower services (housekeeping, security, drivers, MTS) — Dhwani is a software/IT services company with zero relevance to facility management labour procurement.",
+      "url": "https://devnetjobsindia.org/JobDescription.aspx?Job_Id=289140",
+      "has_proposal": false
+    },
+    {
+      "title": "RFP - Assessment of Market Potential and Climate-Resilient Water Supply an...",
+      "organization": "Water.org",
+      "deadline": "",
+      "score": 3,
+      "recommendation": "skip",
+      "reason": "This RFP is a research & evaluation study focused on market assessment and climate-resilience analysis for microfinance WSS products—primarily a consulting/research deliverable, not a technology platform development or implementation engagement.",
+      "url": "https://devnetjobsindia.org/JobDescription.aspx?Job_Id=289414",
+      "has_proposal": false
+    },
+    {
+      "title": "EoI - for Health Camp Community Partner to support in   Conducting Health ...",
+      "organization": "Foresight Foundation",
+      "deadline": "",
+      "score": 2,
+      "recommendation": "skip",
+      "reason": "This RFP is for on-ground health camp operations (driver mobilization, venue setup, medical screening) — a service delivery role — not a technology or software development engagement that matches Dhwani's core IT4D offerings.",
+      "url": "https://devnetjobsindia.org/JobDescription.aspx?Job_Id=289413",
+      "has_proposal": false
+    },
+    {
+      "title": "RFP - Hiring multiple Agencies for Targeted Technical & Implementation Sup...",
+      "organization": "Jhpiego",
+      "deadline": "April 20, 2026",
+      "score": 3,
+      "recommendation": "skip",
+      "reason": "RFP is incomplete and vague on technical requirements — only job title and generic sectors listed without describing actual deliverables, scope, or IT needs; unclear if this is for staffing, software, or consulting.",
+      "url": "https://www.devnetjobsindia.org/JobDescription.aspx?Job_Id=289448",
+      "has_proposal": false
+    },
+    {
+      "title": "RFP - Consultant for Digital Market Enablement, B2B & B2C Linkages for FPOs",
+      "organization": "Development Support Centre (DSC)",
+      "deadline": "",
+      "score": 5,
+      "recommendation": "consider",
+      "reason": "RFP seeks digital market enablement and B2B/B2C linkages for FPOs—not a core Dhwani strength, but custom MIS and data platforms could support FPO aggregation, inventory, order tracking, and farmer-to-buyer connections if scoped clearly.",
+      "url": "https://www.devnetjobsindia.org/JobDescription.aspx?Job_Id=289432",
+      "has_proposal": false
+    },
+    {
+      "title": "RFP for the Deployment of the AgriVaani Application",
+      "organization": "Lords Education and Health Society (LEHS)",
+      "deadline": "",
+      "score": 5,
+      "recommendation": "consider",
+      "reason": "LEHS/Wadhwani AI needs deployment support for an agriculture application with AI/data components, but the RFP lacks technical specifications—unclear if AgriVaani is a data collection tool, analytics platform, or AI model that requires Dhwani's core strengths (mForm, DaaS, Custom Dev).",
+      "url": "https://www.devnetjobsindia.org/JobDescription.aspx?Job_Id=288754",
+      "has_proposal": false
+    },
+    {
+      "title": "RFP - For Cab Hiring Services North East Region",
+      "organization": "Lords Education and Health Society (LEHS)",
+      "deadline": "",
+      "score": 0,
+      "recommendation": "skip",
+      "reason": "This RFP is for cab/vehicle hiring services—a logistics and transportation procurement need with no technology development, data systems, or digital transformation component that aligns with Dhwani's core offerings.",
+      "url": "https://www.devnetjobsindia.org/JobDescription.aspx?Job_Id=289043",
+      "has_proposal": false
+    },
+    {
+      "title": "ToR - for Hiring a Consultant/Agency to Design a Training Module and Mater...",
+      "organization": "Trickle Up Program INC",
+      "deadline": "",
+      "score": 4,
+      "recommendation": "skip",
+      "reason": "RFP is primarily for training content design and curriculum development for community coaches on women's empowerment, not for technology platform or system implementation — core strength lies in instructional design/facilitation skills rather than IT solutions.",
+      "url": "https://devnetjobsindia.org/JobDescription.aspx?Job_Id=289364",
+      "has_proposal": false
+    },
+    {
+      "title": "RFP: Hiring of Agency for Wall Paintings",
+      "organization": "MAMTA Health Institute for Mother and Child (MAMTA)",
+      "deadline": "",
+      "score": 0,
+      "recommendation": "skip",
+      "reason": "RFP is for physical wall painting services in schools—a creative/construction deliverable with no technology, data systems, or digital transformation component.",
+      "url": "https://www.devnetjobsindia.org/JobDescription.aspx?Job_Id=289317",
+      "has_proposal": false
+    },
+    {
+      "title": "RFP - Finance Consultant / Firm, Vikhroli Warehouse Redevelopment Project",
+      "organization": "Indian Red Cross Society Maharashtra State Branch",
+      "deadline": "",
+      "score": 1,
+      "recommendation": "skip",
+      "reason": "This RFP seeks a financial consultant/firm for project finance oversight, tendering verification, and procurement contract review—a traditional accounting/audit service with no IT, data systems, or digital platform component that aligns with Dhwani's tech-for-social-impact offerings.",
+      "url": "https://www.devnetjobsindia.org/JobDescription.aspx?Job_Id=289318",
+      "has_proposal": false
+    },
+    {
+      "title": "RFP - Cybersecurity Risk Assessment",
+      "organization": "International Initiative for Impact Evaluation (3ie)",
+      "deadline": "21 April 2026",
+      "score": 1,
+      "recommendation": "skip",
+      "reason": "3ie requires a CISA-certified cybersecurity firm to conduct a specialized risk assessment and compliance audit against NIST CSF 2.0 and DPDP Act — this is pure cybersecurity consulting outside Dhwani's social sector tech development and M&E expertise.",
+      "url": "https://devnetjobsindia.org/JobDescription.aspx?Job_Id=289303",
+      "has_proposal": false
+    },
+    {
+      "title": "RFP - Reporting, Analytics & Business Modelling: Face-to-Face Fundraising ...",
+      "organization": "ChildFund India",
+      "deadline": "",
+      "score": 6,
+      "recommendation": "consider",
+      "reason": "RFP requires dashboard design, analytics, and business modelling for fundraising performance—core DaaS capability, but fundraising analytics is outside Dhwani's primary social sector focus (grant management, field MIS, health/education); moderate customisation needed.",
+      "url": "https://devnetjobsindia.org/JobDescription.aspx?Job_Id=289297",
+      "has_proposal": false
+    },
+    {
+      "title": "RFP for Recruiting an HR Consulting Firm for Hiring Data Annotators, Revie...",
+      "organization": "Lords Education and Health Society (LEHS)",
+      "deadline": "",
+      "score": 2,
+      "recommendation": "skip",
+      "reason": "This RFP seeks HR/recruitment consulting services for staffing data annotation roles—a pure staffing/HR function outside Dhwani's IT product and tech consulting scope.",
+      "url": "https://www.devnetjobsindia.org/JobDescription.aspx?Job_Id=289283",
+      "has_proposal": false
+    },
+    {
+      "title": "RFP - Speech Data Collection and Annotation for Public Health ASR Models",
+      "organization": "Lords Education and Health Society (LEHS)",
+      "deadline": "",
+      "score": 2,
+      "recommendation": "skip",
+      "reason": "This RFP requires specialized AI/ML expertise in speech recognition and NLP model development—core competencies outside Dhwani's primary IT4D stack; while Dhwani could support data collection logistics, the intellectual property and technical delivery lie in speech annotation and ASR model training, not social sector MIS or program management.",
+      "url": "https://www.devnetjobsindia.org/JobDescription.aspx?Job_Id=289268",
+      "has_proposal": false
+    },
+    {
+      "title": "EOI - External Independent Audit : Protecting the Rights of Children by Bu...",
+      "organization": "Regional Centre for Development Cooperation (RCDC)",
+      "deadline": "",
+      "score": 0,
+      "recommendation": "skip",
+      "reason": "This RFP is explicitly for Chartered Accountant firms to conduct external financial audits of a donor-funded project — a specialized audit/compliance service requiring CA credentials and audit expertise, not an IT or software development need.",
+      "url": "https://www.devnetjobsindia.org/JobDescription.aspx?Job_Id=289202",
+      "has_proposal": false
+    },
+    {
+      "title": "RFP for Agri AI Collect Deployment in Kharif 2026-2027",
+      "organization": "Lords Education and Health Society (LEHS)",
+      "deadline": "",
+      "score": 6,
+      "recommendation": "consider",
+      "reason": "RFP seeks AI-powered agricultural data collection deployment for Kharif 2026–2027; Dhwani's mForm is strong for field data capture but the AI/ML component and specific 'Agri AI Collect' tool suggest LEHS may have proprietary or specialized AI requirements that go beyond standard mobile form collection.",
+      "url": "https://www.devnetjobsindia.org/JobDescription.aspx?Job_Id=288869",
+      "has_proposal": false
+    },
+    {
+      "title": "RFP for For Multilingual Data Collection Services for AgriAI Collect",
+      "organization": "Lords Education and Health Society (LEHS)",
+      "deadline": "",
+      "score": 6,
+      "recommendation": "consider",
+      "reason": "RFP requires multilingual data collection services for an AI agriculture model — mForm is a strong fit for field data capture, but the core AI/ML model development appears to be Wadhwani's responsibility, limiting Dhwani's scope to the data collection layer.",
+      "url": "https://www.devnetjobsindia.org/JobDescription.aspx?Job_Id=288871",
+      "has_proposal": false
+    },
+    {
+      "title": "EOI for a study on Impact Evaluation and Value for Money Analysis of CINI’...",
+      "organization": "Child in Need Institute (CINI)",
+      "deadline": "",
+      "score": 3,
+      "recommendation": "skip",
+      "reason": "This RFP is seeking a research/evaluation partner to conduct impact studies and VfM analysis, not a technology platform or digital system — Dhwani's core IT solutions (mGrant, mForm, mLearn) are not what CINI is tendering for.",
+      "url": "https://www.devnetjobsindia.org/JobDescription.aspx?Job_Id=289121",
+      "has_proposal": false
+    },
+    {
+      "title": "RFP - for Hiring of a Nukkad Natak Agency for community-based activities u...",
+      "organization": "JSI R&T India Foundation (JSI R&T)",
+      "deadline": "",
+      "score": 1,
+      "recommendation": "skip",
+      "reason": "This RFP is for hiring a Nukkad Natak (street theatre) agency to conduct community-based performance activities for immunization advocacy — a creative services/performance contracting need, not a technology or digital systems procurement.",
+      "url": "https://devnetjobsindia.org/JobDescription.aspx?Job_Id=289057",
+      "has_proposal": false
+    },
+    {
+      "title": "RFP for Data Collection for Foundational Numeracy Tool in UP",
+      "organization": "Lords Education and Health Society (LEHS)",
+      "deadline": "",
+      "score": 7,
+      "recommendation": "consider",
+      "reason": "Large-scale handwriting data collection for AI/ML model training in education sector aligns well with Dhwani's mForm mobile data collection expertise and custom dev capabilities, though the core deliverable (AI model development) sits outside Dhwani's primary offering.",
+      "url": "https://www.devnetjobsindia.org/JobDescription.aspx?Job_Id=289044",
+      "has_proposal": false
+    },
+    {
+      "title": "RFP for Hiring a Survey Firm to Conduct the Technical Needs Assessment Sur...",
+      "organization": "EAII Advisors Pvt Ltd",
+      "deadline": "",
+      "score": 3,
+      "recommendation": "skip",
+      "reason": "RFP is for a survey firm to conduct a technical needs assessment for WASH/water program in Odisha — primarily field survey execution rather than software/MIS development, which is outside Dhwani's core IT service offerings.",
+      "url": "https://www.devnetjobsindia.org/JobDescription.aspx?Job_Id=289050",
+      "has_proposal": false
+    },
+    {
+      "title": "RFP - Assessment of WASH Access among Affordable Housing Finance Borrowers",
+      "organization": "Water.org",
+      "deadline": "",
+      "score": 7,
+      "recommendation": "apply",
+      "reason": "Water.org needs M&E/research data collection and analysis for WASH program assessment; Dhwani's mForm + DaaS combination directly addresses field-level data capture and analytics, with proven WASH sector experience.",
+      "url": "https://devnetjobsindia.org/JobDescription.aspx?Job_Id=289012",
+      "has_proposal": false
+    },
+    {
+      "title": "RFP - for an IVRS-based Treatment Literacy Programme for People with Diabe...",
+      "organization": "REACH",
+      "deadline": "",
+      "score": 7,
+      "recommendation": "apply",
+      "reason": "REACH needs an IVRS-based treatment literacy platform with audio modules and app delivery for chronic disease management — Dhwani has strong IVRS/IVR development expertise and can build or customize this solution, though IVRS is not a core product like mGrant or mForm.",
+      "url": "https://devnetjobsindia.org/JobDescription.aspx?Job_Id=288572",
+      "has_proposal": false
+    },
+    {
+      "title": "IFP - for Strengthening systems for multi-sectoral response to Gender-Base...",
+      "organization": "UNFPA",
+      "deadline": "",
+      "score": 5,
+      "recommendation": "consider",
+      "reason": "UNFPA seeks to strengthen GBV response systems through one-stop centres and shelters, requiring M&E, data management, and capacity building capabilities that Dhwani can provide, but the RFP lacks specific tech requirements and appears implementation-focused rather than tech-procurement focused.",
+      "url": "https://devnetjobsindia.org/JobDescription.aspx?Job_Id=288192",
+      "has_proposal": false
+    },
+    {
+      "title": "RFP - Baseline Assessment of the Food Security Standard at Vikarabad In Te...",
+      "organization": "Deutsche Welthungerhilfe",
+      "deadline": "",
+      "score": 3,
+      "recommendation": "skip",
+      "reason": "This RFP is for a baseline impact assessment and research study (M&E research commissioned by University of Bonn/Münster), not for technology platform development, data collection infrastructure, or digital system implementation.",
+      "url": "https://devnetjobsindia.org/JobDescription.aspx?Job_Id=288987",
+      "has_proposal": false
+    },
+    {
+      "title": "RFP - Consultancy Service for a Quasi-Experimental Baseline Study Under a ...",
+      "organization": "Deutsche Welthungerhilfe",
+      "deadline": "",
+      "score": 5,
+      "recommendation": "consider",
+      "reason": "RFP is primarily for research consultancy (quasi-experimental baseline study design and execution) rather than technology implementation, but Dhwani can add value through M&E system design, mobile data collection, and analytics dashboards for behaviour change monitoring.",
+      "url": "https://devnetjobsindia.org/JobDescription.aspx?Job_Id=288967",
+      "has_proposal": false
+    },
+    {
+      "title": "ToR for External Independent Audit of Development Agency for Poor & Tribal...",
+      "organization": "Development Agency for Poor and Tribal Awakening (DAPTA)",
+      "deadline": "",
+      "score": 1,
+      "recommendation": "skip",
+      "reason": "This RFP is for an independent financial audit by a Chartered Accountant or audit firm — a compliance and assurance service completely outside Dhwani's IT/MIS domain.",
+      "url": "https://devnetjobsindia.org/JobDescription.aspx?Job_Id=288900",
+      "has_proposal": false
+    },
+    {
+      "title": "RFP - An Audio Visual Documentary On The Kalindi River System In The India...",
+      "organization": "AHEAD Initiatives",
+      "deadline": "",
+      "score": 1,
+      "recommendation": "skip",
+      "reason": "This RFP is for documentary film production on a river system — a creative media/production service entirely outside Dhwani's IT, software, and data systems expertise.",
+      "url": "https://www.devnetjobsindia.org/JobDescription.aspx?Job_Id=288806",
+      "has_proposal": false
+    }
+  ]
+}
